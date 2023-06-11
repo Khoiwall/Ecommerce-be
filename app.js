@@ -1,21 +1,15 @@
 const dotenv = require("dotenv");
 const morgan = require("morgan");
 const express = require("express");
-const mongoose = require("mongoose");
+const DB = require("./db");
 const AppError = require("./utils/appError");
 var cors = require("cors");
 dotenv.config({ path: "./.env" });
-mongoose
-  .connect(
-    `mongodb+srv://is334:is334123@cluster0.whbiqnx.mongodb.net/?retryWrites=true&w=majority`
-  )
-  .then(() => {
-    console.log("DB connection successfully");
-  });
+
 const app = express();
 const port = 3000;
 app.use(cors());
-
+DB.connectDB();
 //Route file
 const userRouter = require("./routes/authRouters");
 const productRouter = require("./routes/productRouters");
