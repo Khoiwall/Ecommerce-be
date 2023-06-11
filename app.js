@@ -28,7 +28,7 @@ app.use(morgan("dev"));
 
 //ROUTE
 app.get("/", (req, res, next) => {
-  return res.status(200).json("Ecommerce App 123");
+  return res.status(200).json("Ecommerce App 12344");
 });
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/products", productRouter);
