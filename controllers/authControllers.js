@@ -5,8 +5,8 @@ const AppError = require("../utils/appError");
 const { randomImg } = require("../utils/randomAvatar");
 
 const signToken = (id) =>
-  jwt.sign({ id: id }, process.env.JWT_TOKEN_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES_IN,
+  jwt.sign({ id: id }, "EcommerceApp", {
+    expiresIn: "7d",
   });
 const createSendToken = (res, user, statusCode) => {
   const token = signToken(user._id);

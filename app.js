@@ -7,7 +7,7 @@ var cors = require("cors");
 dotenv.config({ path: "./.env" });
 mongoose
   .connect(
-    `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.whbiqnx.mongodb.net/?retryWrites=true&w=majority`
+    `mongodb+srv://is334:is334123@cluster0.whbiqnx.mongodb.net/?retryWrites=true&w=majority`
   )
   .then(() => {
     console.log("DB connection successfully");

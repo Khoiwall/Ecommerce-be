@@ -26,10 +26,7 @@ module.exports = catchAsync(async (req, res, next) => {
       )
     );
   }
-  const decoded = await promisify(jwt.verify)(
-    token,
-    process.env.JWT_TOKEN_SECRET
-  );
+  const decoded = await promisify(jwt.verify)(token, "EcommerceApp");
   console.log(decoded);
   // if (Date.now() > decoded.exp * 1000) {
   //   return next(new AppError("Token Expires.Login Again", 401));
