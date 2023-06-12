@@ -14,7 +14,7 @@ DB.connectDB();
 const userRouter = require("./routes/authRouters");
 const productRouter = require("./routes/productRouters");
 const videoRouter = require("./routes/videoRouters");
-const cartRouter = require("./routes/cartRoute");
+const cartRouter = require("./routes/cartRoutes");
 //Midelware
 
 app.use(express.json());

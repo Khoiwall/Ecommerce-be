@@ -32,7 +32,7 @@ module.exports.updateOne = function (Model) {
 };
 module.exports.getOne = function (Model, populateOptions) {
   return catchAsync(async (req, res, next) => {
-    let query = Model.findById(req.params.id);
+    let query = Model.findById(req.params._id);
     if (populateOptions) {
       query = query.populate(populateOptions);
     }

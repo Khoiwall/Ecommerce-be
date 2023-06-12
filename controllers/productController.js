@@ -2,6 +2,8 @@ const Product = require("../models/productModel");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 const handlerFactory = require("./handlerFactory");
+const CommentModel = require("../models/commentProductModel");
+const User = require("../models/userModel");
 
 module.exports.createProduct = catchAsync(async (req, res, next) => {
   const { name, price, discount, images, bio } = req.body;
@@ -87,6 +89,74 @@ module.exports.updateInforProduct = catchAsync(async (req, res, next) => {
   );
   return res.status(201).json({
     status: "success",
+  });
+});
+module.exports.comment = catchAsync(async (req, res, next) => {
+  const { _id } = req.user;
+  const { content } = req.body;
+  console.log(req.body);
+  const { product_id } = req.params;
+  const create = await CommentModel.create({
+    user_id: _id,
+    content: content,
+    product_id,
+  });
+  const comment = await CommentModel.findOne({
+    _id: create?._id,
+  }).populate({
+    path: "user_id",
+    select: {},
+  });
+  return res.status(200).send({
+    status: "Success",
+    data: comment,
+  });
+});
+module.exports.getComments = catchAsync(async (req, res, next) => {
+  const { product_id } = req.params;
+  const { length } = req.query;
+  const comments = await CommentModel.find({
+    product_id: product_id,
+  })
+    .limit(10)
+    .skip(length * 1)
+    .populate({
+      path: "user_id",
+      select: {},
+    });
+  console.log(comments);
+  return res.status(200).send({
+    status: "Success",
+    data: comments,
+  });
+});
+module.exports.heart = catchAsync(async (req, res, next) => {
+  const { _id } = req.user;
+  const { product_id } = req.params;
+  const { isLike } = req.body;
+  const status = isLike ? "push" : "pull";
+  await User.findOneAndUpdate(
+    {
+      _id: _id,
+    },
+    {
+      [`$${status}`]: {
+        product_id,
+      },
+    }
+  );
+  await Product.findOneAndUpdate(
+    {
+      _id: product_id,
+    },
+    {
+      $inc: {
+        heart: isLike ? 1 : -1,
+      },
+    }
+  );
+  return res.status(200).send({
+    status: "Success",
   });
 });
 module.exports.getProduct = handlerFactory.getOne(Product);

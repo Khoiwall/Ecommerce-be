@@ -40,6 +40,12 @@ const userSchema = new mongoose.Schema({
   role: {
     type: String,
   },
+  product_id: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Product",
+    },
+  ],
 });
 userSchema.pre("save", async function (next) {
   //only run when password is modified;

@@ -3,27 +3,49 @@ const catchAsync = require("../utils/catchAsync");
 const handlerFactory = require("./handlerFactory");
 
 module.exports.createVideo = catchAsync(async (req, res, next) => {
-  const { userID, productID, name, image, description, link } = req.body;
-  if (!userID || !productID || !link || !name || !description || !image) {
-    return res.status(400).json({
-      status: "Missing value in request",
-    });
+  const { _id, role } = req.user;
+  if (role !== "admin") {
+    return next(new AppError("You are not admin", 404));
   }
+  const { products, name, images, bio, link, currentImage } = req.body;
+
   const newVideo = await Video.create({
-    user_id: userID,
-    product_id: productID,
+    user_id: _id,
+    product_id: products,
     name,
-    image,
-    description,
+    images,
+    currentImage,
+    bio,
     link,
+  });
+  const video = await Video.findOne({
+    _id: newVideo?._id,
+  }).populate({
+    path: "product_id",
+    select: {},
   });
   res.status(201).json({
     status: "success",
-    data: newVideo,
+    data: video,
   });
 });
 module.exports.getAllVideo = catchAsync(async (req, res, next) => {
-  const allVideo = await Video.find();
+  const allVideo = await Video.find().populate({
+    path: "product_id",
+    select: {},
+  });
+  return res.status(200).json({
+    status: "success",
+    data: allVideo,
+  });
+});
+module.exports.getAllVideoHaveProducts = catchAsync(async (req, res, next) => {
+  const allVideo = await Video.find({ product_id: { $exists: true, $ne: [] } })
+    .populate({
+      path: "product_id",
+      select: {},
+    })
+    .limit(5);
   return res.status(200).json({
     status: "success",
     data: allVideo,

@@ -6,7 +6,7 @@ module.exports.addProduct = catchAsync(async (req, res, next) => {
   const { _id } = req.user;
   const { product_id } = req.params;
   const { quatity } = req.body;
-
+  console.log(req.body);
   if (!product_id) {
     return next(new AppError("Product Id not Inval", 404));
   }

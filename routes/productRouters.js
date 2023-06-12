@@ -2,6 +2,10 @@ const express = require("express");
 const productController = require("../controllers/productController");
 const checkToken = require("../middlerwares/checkToken.middlerware");
 const router = express.Router();
+
+router.get("/:product_id/comments", productController.getComments);
+router.post("/:product_id/comments", checkToken, productController.comment);
+router.put("/:product_id/heart", checkToken, productController.heart);
 router
   .route("/")
   .get(productController.getAllProduct)
