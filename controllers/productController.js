@@ -9,7 +9,7 @@ module.exports.createProduct = catchAsync(async (req, res, next) => {
   if (role !== "admin") {
     return next(new AppError("You are not admin", 404));
   }
-  if (!name || !price || !discount || !images) {
+  if (!name || !price || !images) {
     return res.status(400).json({
       status: "Missing value in request",
     });
@@ -59,6 +59,22 @@ module.exports.updateDiscount = catchAsync(async (req, res, next) => {
   if (!newProduct) {
     return next(new AppError("Product not found", 404));
   }
+  return res.status(201).json({
+    status: "success",
+  });
+});
+module.exports.updateInforProduct = catchAsync(async (req, res, next) => {
+  const { _id } = req.params;
+  const { role } = req.user;
+  if (role !== "admin") {
+    return next(new AppError("You are not admin", 404));
+  }
+  const newProduct = await Product.findOneAndUpdate(
+    { _id },
+    {
+      $set: req.body,
+    }
+  );
   return res.status(201).json({
     status: "success",
   });

@@ -6,10 +6,12 @@ router
   .route("/")
   .get(productController.getAllProduct)
   .post(checkToken, productController.createProduct);
+
 router
-  .route("/:id")
+  .route("/:_id")
   .get(productController.getProduct)
   .patch(productController.updateProduct)
-  .delete(productController.deleteProduct);
+  .put(checkToken, productController.updateInforProduct)
+  .delete(checkToken, productController.deleteProduct);
 router.put("/:_id/discount", checkToken, productController.updateDiscount);
 module.exports = router;

@@ -3,7 +3,11 @@ const AppError = require("../utils/appError");
 
 module.exports.deleteOne = function (Model) {
   return catchAsync(async (req, res, next) => {
-    const doc = await Model.findByIdAndDelete(req.params.id);
+    const { role } = req.user;
+    if (role !== "admin") {
+      return next(new AppError("You are not admin"));
+    }
+    const doc = await Model.findByIdAndDelete(req.params._id);
     if (!doc)
       return next(new AppError("No document was found by this ID", 404));
     return res.status(200).json({
