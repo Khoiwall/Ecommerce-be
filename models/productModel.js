@@ -1,11 +1,7 @@
 const mongoose = require("mongoose");
 
 const productSchema = new mongoose.Schema({
-  user_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: [true],
-  },
+  bio: { type: String, required: true },
   price: {
     type: Number,
     required: [true],
@@ -14,13 +10,18 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  image: {
-    type: String,
-    required: [true],
-  },
+  images: [
+    {
+      type: String,
+      required: [true],
+    },
+  ],
   discount: {
     type: Number,
-    required: [true],
+  },
+  heart: {
+    type: Number,
+    default: 0,
   },
 });
 

@@ -1,20 +1,25 @@
 const Product = require("../models/productModel");
+const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 const handlerFactory = require("./handlerFactory");
 
 module.exports.createProduct = catchAsync(async (req, res, next) => {
-  const { userID, name, price, discount, image } = req.body;
-  if (!userID || !name || !price || !discount || !image) {
+  const { name, price, discount, images, bio } = req.body;
+  const { role } = req.user;
+  if (role !== "admin") {
+    return next(new AppError("You are not admin", 404));
+  }
+  if (!name || !price || !discount || !images) {
     return res.status(400).json({
       status: "Missing value in request",
     });
   }
   const newProduct = await Product.create({
-    user_id: userID,
+    bio,
     price,
     name,
     discount,
-    image,
+    images,
   });
   res.status(201).json({
     status: "success",
@@ -26,6 +31,36 @@ module.exports.getAllProduct = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     data: allProduct,
+  });
+});
+module.exports.updateDiscount = catchAsync(async (req, res, next) => {
+  const { discount } = req.body;
+  const { _id } = req.params;
+  const { role } = req.user;
+  if (role !== "admin") {
+    return next(new AppError("You are not admin", 404));
+  }
+  if (!discount) {
+    return res.status(400).json({
+      status: "Missing value in request",
+    });
+  }
+
+  const newProduct = await Product.findOneAndUpdate(
+    {
+      _id,
+    },
+    {
+      $set: {
+        discount,
+      },
+    }
+  );
+  if (!newProduct) {
+    return next(new AppError("Product not found", 404));
+  }
+  return res.status(201).json({
+    status: "success",
   });
 });
 module.exports.getProduct = handlerFactory.getOne(Product);

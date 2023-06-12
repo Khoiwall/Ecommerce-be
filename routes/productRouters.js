@@ -1,13 +1,15 @@
 const express = require("express");
 const productController = require("../controllers/productController");
+const checkToken = require("../middlerwares/checkToken.middlerware");
 const router = express.Router();
 router
   .route("/")
   .get(productController.getAllProduct)
-  .post(productController.createProduct);
+  .post(checkToken, productController.createProduct);
 router
   .route("/:id")
   .get(productController.getProduct)
   .patch(productController.updateProduct)
   .delete(productController.deleteProduct);
+router.put("/:_id/discount", checkToken, productController.updateDiscount);
 module.exports = router;

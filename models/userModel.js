@@ -37,6 +37,9 @@ const userSchema = new mongoose.Schema({
   },
   bio: { type: String },
   coverImage: { type: String },
+  role: {
+    type: String,
+  },
 });
 userSchema.pre("save", async function (next) {
   //only run when password is modified;

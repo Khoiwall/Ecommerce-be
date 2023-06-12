@@ -82,7 +82,7 @@ module.exports.updateUser = catchAsync(async (req, res, next) => {
       _id,
     },
     {
-      $set: { ...option },
+      $set: checkUser?.name !== name ? { ...option, name } : option,
     },
     { new: true }
   );
