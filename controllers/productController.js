@@ -40,11 +40,6 @@ module.exports.updateDiscount = catchAsync(async (req, res, next) => {
   if (role !== "admin") {
     return next(new AppError("You are not admin", 404));
   }
-  if (!discount) {
-    return res.status(400).json({
-      status: "Missing value in request",
-    });
-  }
 
   const newProduct = await Product.findOneAndUpdate(
     {
@@ -52,7 +47,7 @@ module.exports.updateDiscount = catchAsync(async (req, res, next) => {
     },
     {
       $set: {
-        discount,
+        discount: discount || 0,
       },
     }
   );
