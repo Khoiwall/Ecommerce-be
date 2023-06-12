@@ -5,7 +5,8 @@ const router = express.Router();
 router
   .route("/")
   .get(productController.getAllProduct)
-  .post(checkToken, productController.createProduct);
+  .post(checkToken, productController.createProduct)
+  .delete(checkToken, productController.deleteProducts);
 
 router
   .route("/:_id")

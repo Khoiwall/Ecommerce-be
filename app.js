@@ -14,6 +14,7 @@ DB.connectDB();
 const userRouter = require("./routes/authRouters");
 const productRouter = require("./routes/productRouters");
 const videoRouter = require("./routes/videoRouters");
+const cartRouter = require("./routes/cartRoute");
 //Midelware
 
 app.use(express.json());
@@ -27,6 +28,7 @@ app.get("/", (req, res, next) => {
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/products", productRouter);
 app.use("/api/v1/videos", videoRouter);
+app.use("/api/v1/carts", cartRouter);
 
 app.use((err, req, res, next) => {
   console.log(err?.message);

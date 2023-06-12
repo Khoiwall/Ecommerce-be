@@ -58,13 +58,28 @@ module.exports.updateDiscount = catchAsync(async (req, res, next) => {
     status: "success",
   });
 });
+module.exports.deleteProducts = catchAsync(async (req, res, next) => {
+  const { _id } = req.body;
+  const { role } = req.user;
+  if (role !== "admin") {
+    return next(new AppError("You are not admin", 404));
+  }
+  for (var i = 0; i < _id?.length; i++) {
+    await Product.findOneAndDelete({
+      _id: _id[i],
+    });
+  }
+  return res.status(201).json({
+    status: "success",
+  });
+});
 module.exports.updateInforProduct = catchAsync(async (req, res, next) => {
   const { _id } = req.params;
   const { role } = req.user;
   if (role !== "admin") {
     return next(new AppError("You are not admin", 404));
   }
-  const newProduct = await Product.findOneAndUpdate(
+  await Product.findOneAndUpdate(
     { _id },
     {
       $set: req.body,
